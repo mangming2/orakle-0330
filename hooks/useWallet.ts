@@ -21,6 +21,10 @@ export default function useWallet() {
       // TODO: Mission 1: connect wallet using sdk
       // https://sdk.mint.club/docs/sdk/wallet/connect
       // ...
+      const address = await mintclub.wallet.connect();
+      useGlobalStore.setState({ account: address });
+      toast.success('Wallet connected');
+      syncAccount();
     } catch (e: any) {
       console.error(e);
       toast.error(e?.message);
@@ -37,6 +41,9 @@ export default function useWallet() {
     // TODO: Mission 2: disconnect wallet using sdk
     // https://sdk.mint.club/docs/sdk/wallet/disconnect
     // ...
+    await mintclub.wallet.disconnect();
+    useGlobalStore.setState({ account: null });
+    toast.success('Wallet disconnected');
     await syncAccount();
   }
 
