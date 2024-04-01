@@ -26,7 +26,29 @@ export default function useCreate(symbol: string) {
       creatorAllocation: 1, // initial supply to the deployer = 1 = self follow
     };
 
-    // ...
+    await mintclub
+      .network('base')
+      .nft('MNFT')
+      .create({
+        name: 'Mint Club Collection',
+        reserveToken: {
+          address: '0x883220A28533928eff6159666d7B1a5Fd5C30536', // mainnet WETH nft address
+          decimals: 18,
+        },
+        curveData: {
+          curveType: 'EXPONENTIAL',
+          stepCount: 10, // how granular the curve is
+          maxSupply: 10_000, // NFT max supply
+          initialMintingPrice: 1, // starting price, 천원
+          finalMintingPrice: 100_000, // ending price, 일억
+          creatorAllocation: 1, // initial supply to the deployer = 1 = self follow
+        },
+        metadataUrl,
+        onSuccess,
+        onError: (e) => {
+          console.error(e);
+        },
+      });
   }
 
   async function checkExisting(symbol: string) {
@@ -35,7 +57,7 @@ export default function useCreate(symbol: string) {
     // https://sdk.mint.club/docs/sdk/network/nft/exists
     // 이미 같은 심볼로 발행된 NFT 는 발행 불가능. 유저이름으로 사용.
     // ...
-
+    const exists = await mintclub.network('base').nft(symbol).exists();
     setCheckingUsername(false);
     return exists;
   }

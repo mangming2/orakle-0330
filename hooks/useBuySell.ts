@@ -26,7 +26,7 @@ export default function useBuySell(
         [estimation] = await nft.getSellEstimation(BigInt(amount));
       }
 
-      setEstimation(toNumber(estimation, 18) * 1000);
+      setEstimation(toNumber(estimation, 18));
     } finally {
       setEstimating(false);
     }
@@ -56,8 +56,32 @@ export default function useBuySell(
       setLoading(true);
       // TODO: Mission 8: buy NFT using sdk
       // https://sdk.mint.club/docs/sdk/network/nft/buy
-
-      // ...
+      await mintclub
+        .network('base')
+        .nft(tokenAddress)
+        .buy({
+          amount: BigInt(amount),
+          onAllowanceSignatureRequest: () => {
+            toast('🔓 컨트랙트의 토큰사용을 허용해주세요');
+          },
+          onAllowanceSuccess: () => {
+            toast.success('허용되었습니다');
+          },
+          onSignatureRequest: () => {
+            toast('🖊️ 트랜잭션을 승인해주세요');
+          },
+          onSigned: () => {
+            toast.success('🚀 트랜잭션이 성공적으로 전송되었습니다');
+          },
+          debug: (e) => {
+            console.log(e);
+          },
+          onSuccess,
+          onError: (e: any) => {
+            console.error(e);
+            toast.error('구매에 실패했습니다. 콘솔을 확인해주세요');
+          },
+        });
     } finally {
       setLoading(false);
     }
@@ -69,7 +93,32 @@ export default function useBuySell(
       // TODO: Mission 9: sell NFT using sdk
       // https://sdk.mint.club/docs/sdk/network/nft/sell
 
-      // ...
+      await mintclub
+        .network('base')
+        .nft(tokenAddress)
+        .sell({
+          amount: BigInt(amount),
+          onAllowanceSignatureRequest: () => {
+            toast('🔓 컨트랙트의 토큰사용을 허용해주세요');
+          },
+          onAllowanceSuccess: () => {
+            toast.success('허용되었습니다');
+          },
+          onSignatureRequest: () => {
+            toast('🖊️ 트랜잭션을 승인해주세요');
+          },
+          onSigned: () => {
+            toast.success('🚀 트랜잭션이 성공적으로 전송되었습니다');
+          },
+          debug: (e) => {
+            console.log(e);
+          },
+          onSuccess,
+          onError: (e: any) => {
+            console.error(e);
+            toast.error('구매에 실패했습니다. 콘솔을 확인해주세요');
+          },
+        });
     } finally {
       setLoading(false);
     }

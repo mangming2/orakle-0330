@@ -51,6 +51,7 @@ export default function useWallet() {
     // TODO: Mission 3: change wallet using sdk
     // https://sdk.mint.club/docs/sdk/wallet/change
     // ...
+    await mintclub.wallet.change();
     await syncAccount();
   }
 
